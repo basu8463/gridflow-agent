@@ -24,6 +24,20 @@ OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
 # Agent decisions below this confidence are always routed to a human.
 CONFIDENCE_THRESHOLD = float(os.getenv("CONFIDENCE_THRESHOLD", "0.75"))
 
+# Comma-separated browser origins allowed to call the API (local + Vercel).
+FRONTEND_ORIGINS = [
+    o.strip()
+    for o in os.getenv(
+        "FRONTEND_ORIGINS",
+        "http://localhost:3000,http://127.0.0.1:3000",
+    ).split(",")
+    if o.strip()
+]
+FRONTEND_ORIGIN_REGEX = os.getenv(
+    "FRONTEND_ORIGIN_REGEX",
+    r"https://.*\.vercel\.app",
+)
+
 
 def available_countries() -> list[str]:
     return sorted(p.name.upper() for p in RULEBOOKS_DIR.iterdir() if p.is_dir())

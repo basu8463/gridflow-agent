@@ -1,10 +1,39 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { CaseRecord, getCases, reviewCase } from "@/lib/api";
+
+const FILTERS = [
+  { id: "all", label: "All" },
+  { id: "pending_review", label: "Needs review" },
+  { id: "auto_approved", label: "Auto-approved" },
+  { id: "approved", label: "Approved" },
+  { id: "rejected", label: "Rejected" },
+  { id: "needs_more_info", label: "More info" },
+] as const;
+
+function statusClass(status?: string) {
+  switch (status) {
+    case "approved":
+    case "auto_approved":
+      return "bg-teal/10 text-teal";
+    case "rejected":
+      return "bg-red-50 text-red-700";
+    case "pending_review":
+      return "bg-amber-50 text-amber-800";
+    default:
+      return "bg-sand text-navy";
+  }
+}
+
+function when(ts?: number | null) {
+  if (!ts) return "";
+  return new Date(ts * 1000).toLocaleString();
+}
 
 export default function QueuePage() {
   const [cases, setCases] = useState<CaseRecord[]>([]);
+  const [filter, setFilter] = useState<string>("all");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
 
@@ -19,6 +48,19 @@ export default function QueuePage() {
   useEffect(() => {
     refresh();
   }, []);
+
+  const counts = useMemo(() => {
+    const c: Record<string, number> = { all: cases.length };
+    for (const item of cases) {
+      const key = item.decision?.status ?? "processing";
+      c[key] = (c[key] ?? 0) + 1;
+    }
+    return c;
+  }, [cases]);
+
+  const visible = cases.filter((c) =>
+    filter === "all" ? true : c.decision?.status === filter,
+  );
 
   async function act(
     id: string,
@@ -44,18 +86,42 @@ export default function QueuePage() {
         Review queue
       </h1>
       <p className="mt-2 max-w-2xl text-sm text-muted">
-        Low-confidence decisions, missing documents, and rejections always land
-        here. The agent drafts; a human signs off.
+        The agent drafts. You sign off. Approvals persist across restarts —
+        this is the audit trail a DSO would keep.
       </p>
+
+      <div className="mt-6 flex flex-wrap gap-2">
+        {FILTERS.map((f) => (
+          <button
+            key={f.id}
+            type="button"
+            onClick={() => setFilter(f.id)}
+            className={`rounded-full px-3 py-1.5 text-xs ${
+              filter === f.id ? "bg-navy text-white" : "border border-line bg-white text-navy"
+            }`}
+          >
+            {f.label}
+            <span className="ml-1.5 opacity-70">{counts[f.id] ?? 0}</span>
+          </button>
+        ))}
+      </div>
+
       {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
-      {cases.length === 0 && (
+      {visible.length === 0 && (
         <p className="mt-8 text-sm text-muted">
-          No cases yet. Run an application on the home page.
+          No cases in this view. Run an application on the home page.
         </p>
       )}
       <ul className="mt-8 space-y-4">
-        {cases.map((c) => {
+        {visible.map((c) => {
           const d = c.decision;
+          const extracted = c.extracted as
+            | { connection_type?: string; requested_power_kw?: number }
+            | null
+            | undefined;
+          const canReview =
+            d &&
+            (d.status === "pending_review" || d.status === "auto_approved");
           return (
             <li
               key={c.id}
@@ -63,16 +129,28 @@ export default function QueuePage() {
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <p className="font-mono text-xs text-muted">#{c.id}</p>
+                  <p className="font-mono text-xs text-muted">
+                    #{c.id} · {when(c.created_at)}
+                  </p>
                   <h2 className="mt-1 font-semibold text-navy">
                     {c.application.applicant_name} · {c.application.country}
                   </h2>
+                  {extracted?.connection_type && (
+                    <p className="mt-1 text-xs uppercase tracking-wide text-teal">
+                      {extracted.connection_type.replaceAll("_", " ")}
+                      {extracted.requested_power_kw != null
+                        ? ` · ${extracted.requested_power_kw} kW`
+                        : ""}
+                    </p>
+                  )}
                   <p className="mt-1 text-sm text-muted">
                     {c.application.description}
                   </p>
                 </div>
                 {d && (
-                  <span className="rounded-full bg-sand px-3 py-1 text-xs font-medium uppercase tracking-wide text-navy">
+                  <span
+                    className={`rounded-full px-3 py-1 text-xs font-medium uppercase tracking-wide ${statusClass(d.status)}`}
+                  >
                     {d.status.replaceAll("_", " ")}
                   </span>
                 )}
@@ -80,7 +158,7 @@ export default function QueuePage() {
               {d && (
                 <div className="mt-4 grid gap-3 text-sm sm:grid-cols-3">
                   <p>
-                    <span className="text-muted">Outcome</span>
+                    <span className="text-muted">Draft outcome</span>
                     <br />
                     {d.outcome.replaceAll("_", " ")}
                   </p>
@@ -101,7 +179,7 @@ export default function QueuePage() {
                   {d.justification}
                 </p>
               )}
-              {d?.status === "pending_review" && (
+              {canReview && (
                 <div className="mt-4 flex flex-wrap gap-2">
                   <button
                     disabled={busy === c.id}
@@ -127,7 +205,10 @@ export default function QueuePage() {
                 </div>
               )}
               {c.reviewer_note && (
-                <p className="mt-3 text-xs text-muted">Note: {c.reviewer_note}</p>
+                <p className="mt-3 text-xs text-muted">
+                  Reviewer: {c.reviewer_note}
+                  {c.reviewed_at ? ` · ${when(c.reviewed_at)}` : ""}
+                </p>
               )}
             </li>
           );

@@ -3,6 +3,7 @@ __pycache__/
 *.pyc
 .venv/
 .chroma/
+*.db
 
 # Env & secrets
 .env

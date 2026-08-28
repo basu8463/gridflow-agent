@@ -103,8 +103,27 @@ npm install && npm run dev
 
 Open http://localhost:3000 — run a DE heat pump, switch to AT, watch the rulebook change the outcome.
 
+## Interview demo (2 minutes)
+
+1. **New application** — run **DE · 14 kW heat pump**. Trace: extract → retrieve DE-HP-2 → approval track → approve.
+2. Load **AT · same 14 kW request**. Same agent, Austrian pack: notification track, missing `network_access_contract`.
+3. **Review queue** — filter *Needs review*, approve or override. That is the human-in-the-loop.
+4. **Rulebooks** — table of DE vs AT limits. New country = a folder, not a rewrite.
+5. **Evals** — 10/10 golden cases. AI ROI is a measured pass rate, not a slide.
+
+## Deploy
+
+**API (Render):** New Web Service from this GitHub repo, root `backend`, start
+`uvicorn app.main:app --host 0.0.0.0 --port $PORT`. Set `ANTHROPIC_API_KEY`
+and `FRONTEND_ORIGINS` to your Vercel URL (e.g. `https://gridflow.vercel.app`).
+
+**UI (Vercel):** Import the same repo, root directory `frontend`. Set
+`NEXT_PUBLIC_API_URL` to the Render URL (e.g. `https://gridflow-api.onrender.com`).
+
+Or use `render.yaml` at the repo root (Blueprint) for the API.
+
 ## Status
 
 - [x] Day 1 — agent core, rulebook packs (DE/AT), tools, RAG, eval harness
 - [x] Day 2 — FastAPI + SSE trace streaming + Next.js operator UI
-- [ ] Day 3 — polish, deploy (Vercel frontend + Render API)
+- [x] Day 3 — SQLite queue persistence, review filters, deploy configs

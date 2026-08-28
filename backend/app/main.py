@@ -22,7 +22,8 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_origins=config.FRONTEND_ORIGINS,
+    allow_origin_regex=config.FRONTEND_ORIGIN_REGEX,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -39,6 +40,11 @@ def health():
         "countries": config.available_countries(),
         "confidence_threshold": config.CONFIDENCE_THRESHOLD,
     }
+
+
+@app.get("/stats")
+def case_stats():
+    return store.stats()
 
 
 @app.get("/countries")

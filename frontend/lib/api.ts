@@ -81,10 +81,19 @@ export async function getCountries() {
   return res.json() as Promise<CountryPack[]>;
 }
 
-export async function getCases() {
-  const res = await fetch(`${API_URL}/cases`);
+export async function getCases(status?: string) {
+  const url = status
+    ? `${API_URL}/cases?status=${encodeURIComponent(status)}`
+    : `${API_URL}/cases`;
+  const res = await fetch(url);
   if (!res.ok) throw new Error("Failed to load cases");
   return res.json() as Promise<CaseRecord[]>;
+}
+
+export async function getStats() {
+  const res = await fetch(`${API_URL}/stats`);
+  if (!res.ok) throw new Error("Failed to load stats");
+  return res.json() as Promise<{ total: number; by_status: Record<string, number> }>;
 }
 
 export async function reviewCase(

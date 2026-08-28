@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { API_URL } from "@/lib/api";
+import { API_URL, getStats } from "@/lib/api";
 
 type Golden = {
   name: string;
@@ -10,6 +10,7 @@ type Golden = {
 
 export default function EvalsPage() {
   const [cases, setCases] = useState<Golden[]>([]);
+  const [queueTotal, setQueueTotal] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -20,6 +21,9 @@ export default function EvalsPage() {
       })
       .then(setCases)
       .catch((e) => setError(String(e)));
+    getStats()
+      .then((s) => setQueueTotal(s.total))
+      .catch(() => undefined);
   }, []);
 
   return (
@@ -41,7 +45,7 @@ export default function EvalsPage() {
         {[
           { k: "10/10", v: "Golden cases passing" },
           { k: "0.75", v: "Confidence floor → human" },
-          { k: "2", v: "LLM calls per case (extract + decide)" },
+          { k: queueTotal != null ? String(queueTotal) : "—", v: "Cases in the live queue" },
         ].map((m) => (
           <div
             key={m.v}
