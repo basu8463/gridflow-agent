@@ -1,8 +1,10 @@
 # Render Blueprint — connect this repo, then set ANTHROPIC_API_KEY in the dashboard.
+# One-click: https://render.com/deploy?repo=https://github.com/basu8463/gridflow-agent
 services:
   - type: web
     name: gridflow-api
     runtime: python
+    pythonVersion: "3.11.11"
     rootDir: backend
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
@@ -12,8 +14,6 @@ services:
         sync: false
       - key: ANTHROPIC_MODEL
         value: claude-sonnet-4-5
-      - key: FRONTEND_ORIGINS
-        sync: false
       - key: PYTHONUNBUFFERED
         value: "1"
       - key: ANONYMIZED_TELEMETRY
