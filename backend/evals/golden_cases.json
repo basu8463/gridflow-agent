@@ -1,0 +1,112 @@
+[
+  {
+    "name": "DE heat pump 14kW, complete docs → approval track",
+    "input": {
+      "country": "DE",
+      "applicant_name": "Anna Schmidt",
+      "address": "Lindenstraße 12, 50674 Köln",
+      "description": "Installing an air-source heat pump, Vaillant aroTHERM plus, 14 kW electrical rating. Requesting grid connection.",
+      "documents": ["application_form", "heat_pump_datasheet", "electrician_confirmation"]
+    },
+    "expected": { "track": "approval", "outcome_in": ["approve", "approve_with_conditions"] }
+  },
+  {
+    "name": "DE heat pump 9kW, complete docs → notification, approve",
+    "input": {
+      "country": "DE",
+      "applicant_name": "Jonas Weber",
+      "address": "Hauptstraße 3, 80331 München",
+      "description": "New 9 kW heat pump for a single family house, requesting connection.",
+      "documents": ["application_form", "heat_pump_datasheet", "electrician_confirmation"]
+    },
+    "expected": { "track": "notification", "outcome_in": ["approve"] }
+  },
+  {
+    "name": "DE EV charger 22kW, missing electrician confirmation → request documents",
+    "input": {
+      "country": "DE",
+      "applicant_name": "Miriam Fischer",
+      "address": "Gartenweg 8, 10115 Berlin",
+      "description": "Requesting connection for a 22 kW wallbox EV charger in our garage.",
+      "documents": ["application_form", "charger_datasheet"]
+    },
+    "expected": { "track": "approval", "outcome_in": ["request_documents"] }
+  },
+  {
+    "name": "DE solar 25kW complete docs → notification, approve",
+    "input": {
+      "country": "DE",
+      "applicant_name": "Peter Braun",
+      "address": "Feldstraße 44, 22765 Hamburg",
+      "description": "Rooftop solar PV installation with 25 kW peak feed-in capacity.",
+      "documents": ["application_form", "pv_datasheet", "installer_certificate", "site_plan"]
+    },
+    "expected": { "track": "notification", "outcome_in": ["approve"] }
+  },
+  {
+    "name": "DE solar 120kW → exceeds hard limit, reject",
+    "input": {
+      "country": "DE",
+      "applicant_name": "AgrarEnergie GmbH",
+      "address": "Industriestraße 2, 04103 Leipzig",
+      "description": "Commercial rooftop PV plant, 120 kW feed-in requested.",
+      "documents": ["application_form", "pv_datasheet", "installer_certificate", "site_plan"]
+    },
+    "expected": { "track": "approval", "outcome_in": ["reject"] }
+  },
+  {
+    "name": "AT heat pump 14kW → notification in Austria (limit 15), approve",
+    "input": {
+      "country": "AT",
+      "applicant_name": "Franz Huber",
+      "address": "Grinzinger Allee 5, 1190 Wien",
+      "description": "Air-source heat pump, 14 kW electrical rating, family home.",
+      "documents": ["application_form", "heat_pump_datasheet", "electrician_confirmation", "network_access_contract"]
+    },
+    "expected": { "track": "notification", "outcome_in": ["approve"] }
+  },
+  {
+    "name": "AT heat pump 14kW without network access contract → request documents",
+    "input": {
+      "country": "AT",
+      "applicant_name": "Maria Gruber",
+      "address": "Salzachweg 9, 5020 Salzburg",
+      "description": "Air-source heat pump, 14 kW electrical rating.",
+      "documents": ["application_form", "heat_pump_datasheet", "electrician_confirmation"]
+    },
+    "expected": { "track": "notification", "outcome_in": ["request_documents"] }
+  },
+  {
+    "name": "AT solar 25kW → approval track in Austria (limit 20)",
+    "input": {
+      "country": "AT",
+      "applicant_name": "Sonnenkraft OG",
+      "address": "Lindengasse 20, 4020 Linz",
+      "description": "Rooftop PV system with 25 kW feed-in capacity.",
+      "documents": ["application_form", "pv_datasheet", "installer_certificate", "site_plan", "tor_conformity_certificate"]
+    },
+    "expected": { "track": "approval", "outcome_in": ["approve", "approve_with_conditions"] }
+  },
+  {
+    "name": "AT EV charger 11kW → approval track in Austria (limit 7.4)",
+    "input": {
+      "country": "AT",
+      "applicant_name": "Lukas Steiner",
+      "address": "Bergstraße 1, 6020 Innsbruck",
+      "description": "11 kW EV wallbox charger for private garage.",
+      "documents": ["application_form", "charger_datasheet", "electrician_confirmation"]
+    },
+    "expected": { "track": "approval", "outcome_in": ["approve", "approve_with_conditions"] }
+  },
+  {
+    "name": "DE new home connection, missing load calculation → request documents",
+    "input": {
+      "country": "DE",
+      "applicant_name": "Familie Krause",
+      "address": "Am Neubaugebiet 7, 01067 Dresden",
+      "description": "New single-family home requires a 30 kW grid connection.",
+      "documents": ["application_form", "site_plan"]
+    },
+    "expected": { "track": "approval", "outcome_in": ["request_documents"] }
+  }
+]

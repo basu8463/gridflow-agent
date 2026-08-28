@@ -1,0 +1,56 @@
+# Rulebook pack: Germany (DE)
+# NOTE: Simplified demo rules inspired by German grid-connection practice.
+# Not legal advice; real DSO rules differ per operator.
+country: DE
+country_name: Germany
+currency: EUR
+language: de
+
+connection_types:
+  heat_pump:
+    label: Heat pump
+    notify_only_max_kw: 12        # <= this: simple notification procedure
+    approval_required_above_kw: 12 # above: load-management approval (DE-HP-2)
+    hard_limit_kw: 50
+    required_documents:
+      - application_form
+      - heat_pump_datasheet
+      - electrician_confirmation
+  solar_pv:
+    label: Solar PV (feed-in)
+    notify_only_max_kw: 30
+    approval_required_above_kw: 30
+    hard_limit_kw: 100
+    required_documents:
+      - application_form
+      - pv_datasheet
+      - installer_certificate
+      - site_plan
+  ev_charger:
+    label: EV charging point
+    notify_only_max_kw: 11
+    approval_required_above_kw: 11
+    hard_limit_kw: 44
+    required_documents:
+      - application_form
+      - charger_datasheet
+      - electrician_confirmation
+  new_home:
+    label: New home connection
+    notify_only_max_kw: 0          # always requires review
+    approval_required_above_kw: 0
+    hard_limit_kw: 100
+    required_documents:
+      - application_form
+      - site_plan
+      - load_calculation
+
+fees:
+  base_fee: 500
+  per_kw_above_threshold: 120
+  threshold_kw: 30
+  currency: EUR
+
+sla:
+  notification_days: 10
+  approval_days: 30

@@ -1,0 +1,59 @@
+# Rulebook pack: Austria (AT)
+# NOTE: Simplified demo rules inspired by Austrian grid-connection practice
+# (TOR concepts). Not legal advice; real DSO rules differ per operator.
+country: AT
+country_name: Austria
+currency: EUR
+language: de
+
+connection_types:
+  heat_pump:
+    label: Heat pump
+    notify_only_max_kw: 15
+    approval_required_above_kw: 15
+    hard_limit_kw: 50
+    required_documents:
+      - application_form
+      - heat_pump_datasheet
+      - electrician_confirmation
+      - network_access_contract   # AT-specific: contract with DSO required
+  solar_pv:
+    label: Solar PV (feed-in)
+    notify_only_max_kw: 20        # stricter than DE
+    approval_required_above_kw: 20
+    hard_limit_kw: 100
+    required_documents:
+      - application_form
+      - pv_datasheet
+      - installer_certificate
+      - site_plan
+      - tor_conformity_certificate  # AT-specific: TOR Erzeuger conformity
+  ev_charger:
+    label: EV charging point
+    notify_only_max_kw: 7.4       # stricter single-phase-oriented limit
+    approval_required_above_kw: 7.4
+    hard_limit_kw: 44
+    required_documents:
+      - application_form
+      - charger_datasheet
+      - electrician_confirmation
+  new_home:
+    label: New home connection
+    notify_only_max_kw: 0
+    approval_required_above_kw: 0
+    hard_limit_kw: 100
+    required_documents:
+      - application_form
+      - site_plan
+      - load_calculation
+      - network_access_contract
+
+fees:
+  base_fee: 400
+  per_kw_above_threshold: 150
+  threshold_kw: 20
+  currency: EUR
+
+sla:
+  notification_days: 14
+  approval_days: 40
