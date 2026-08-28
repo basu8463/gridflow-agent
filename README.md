@@ -80,9 +80,31 @@ cp .env.example .env   # add your ANTHROPIC_API_KEY
 > connection practice — clearly not legal advice. The point is the
 > architecture: rules as swappable content.
 
+## API
+
+```bash
+cd backend
+.venv/bin/uvicorn app.main:app --reload --port 8000
+```
+
+- `POST /applications` — run the agent, return the case
+- `POST /applications/stream` — SSE: `trace` events then `done`
+- `GET /cases` · `POST /cases/{id}/review` — human-in-the-loop queue
+- `GET /countries` · `GET /rulebooks/{DE|AT}` — swappable packs
+- `GET /evals/golden` — evaluation cases
+
+## Frontend
+
+```bash
+cd frontend
+cp .env.local.example .env.local   # NEXT_PUBLIC_API_URL=http://127.0.0.1:8000
+npm install && npm run dev
+```
+
+Open http://localhost:3000 — run a DE heat pump, switch to AT, watch the rulebook change the outcome.
+
 ## Status
 
 - [x] Day 1 — agent core, rulebook packs (DE/AT), tools, RAG, eval harness
-- [ ] Day 2 — FastAPI backend with SSE trace streaming, MCP tool server
-- [ ] Day 3 — Next.js frontend: application form, live trace, review queue
-- [ ] Day 4 — eval/ROI dashboard, deployment (Vercel + Render)
+- [x] Day 2 — FastAPI + SSE trace streaming + Next.js operator UI
+- [ ] Day 3 — polish, deploy (Vercel frontend + Render API)

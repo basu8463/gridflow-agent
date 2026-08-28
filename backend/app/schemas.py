@@ -64,3 +64,25 @@ class TraceEvent(BaseModel):
     detail: str
     data: dict | None = None
     ts: float = Field(default_factory=time.time)
+
+
+ReviewAction = Literal["approve", "override_reject", "request_more_info"]
+
+
+class ReviewRequest(BaseModel):
+    action: ReviewAction
+    note: str = ""
+    override_outcome: Outcome | None = None
+
+
+class CaseRecord(BaseModel):
+    """One processed application sitting in the review queue."""
+
+    id: str
+    created_at: float
+    application: ApplicationInput
+    extracted: dict | None = None
+    decision: Decision | None = None
+    trace: list[TraceEvent] = Field(default_factory=list)
+    reviewer_note: str = ""
+    reviewed_at: float | None = None

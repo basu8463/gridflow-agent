@@ -1,0 +1,34 @@
+@import "tailwindcss";
+
+:root {
+  --navy: #0b1f33;
+  --navy-2: #14324f;
+  --teal: #0f766e;
+  --teal-2: #14b8a6;
+  --sand: #f4f1ea;
+  --ink: #12202c;
+  --muted: #5c6b78;
+  --line: #d9e0e6;
+}
+
+@theme inline {
+  --color-navy: var(--navy);
+  --color-navy-2: var(--navy-2);
+  --color-teal: var(--teal);
+  --color-teal-2: var(--teal-2);
+  --color-sand: var(--sand);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--sand);
+  color: var(--ink);
+}
+
+.trace-dot {
+  box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.16);
+}
