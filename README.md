@@ -113,14 +113,15 @@ Open http://localhost:3000 — run a DE heat pump, switch to AT, watch the ruleb
 
 ## Deploy
 
-**API (Render):** New Web Service from this GitHub repo, root `backend`, start
-`uvicorn app.main:app --host 0.0.0.0 --port $PORT`. Set `ANTHROPIC_API_KEY`
-and `FRONTEND_ORIGINS` to your Vercel URL (e.g. `https://gridflow.vercel.app`).
+Code: [basu8463/gridflow-agent](https://github.com/basu8463/gridflow-agent)
 
-**UI (Vercel):** Import the same repo, root directory `frontend`. Set
-`NEXT_PUBLIC_API_URL` to the Render URL (e.g. `https://gridflow-api.onrender.com`).
+1. **API** — [Deploy to Render](https://render.com/deploy?repo=https://github.com/basu8463/gridflow-agent)  
+   Sign in with GitHub, paste `ANTHROPIC_API_KEY`, apply. Copy the `*.onrender.com` URL.
 
-Or use `render.yaml` at the repo root (Blueprint) for the API.
+2. **UI** — [Deploy to Vercel](https://vercel.com/new/clone?repository-url=https://github.com/basu8463/gridflow-agent&project-name=gridflow&root-directory=frontend)  
+   Root directory `frontend`. Set `NEXT_PUBLIC_API_URL` to the Render URL (no trailing slash).
+
+CORS already allows `https://*.vercel.app`.
 
 ## Status
 

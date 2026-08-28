@@ -32,6 +32,17 @@ app.add_middleware(
 GOLDEN_PATH = Path(__file__).resolve().parent.parent / "evals" / "golden_cases.json"
 
 
+@app.get("/")
+def root():
+    return {
+        "name": "GridFlow",
+        "status": "ok",
+        "health": "/health",
+        "docs": "/docs",
+        "ui": "Deploy the frontend on Vercel with NEXT_PUBLIC_API_URL pointing here.",
+    }
+
+
 @app.get("/health")
 def health():
     return {
